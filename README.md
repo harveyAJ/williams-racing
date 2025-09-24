@@ -6,6 +6,8 @@ Docker daemon running (Aspire requires it)
 
 ## How to run 
 
+Open up the `RaceDataApp.sln`
+
 `RaceDataApp.AppHost` is the Aspire orchestrator, which will spin up all the services. THe first time you run it, it will take quite abit of time for the data to be persisted to the DB.
 
 The Aspire dashboard should pop up and you can view the different resources in there.
@@ -19,6 +21,10 @@ you can click on pgweb to view the data (once it's loaded - it will take some ti
 Once the migration has completed, it should look like this
 
 ![alt text](image-2.png)
+
+You can view logs for each of the services, like so:
+
+![alt text](image-3.png)
 
 There is an API with two endpoints exposed on port `:5002`
 
@@ -34,6 +40,10 @@ When calling via e.g. Postman make sure you add the following header
 `Accept: application/json`
 
 otherwise the output will look :poo:
+
+Here's an example of what the query returns
+
+![alt text](image-4.png)
 
 ## Design
 
@@ -54,4 +64,69 @@ ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basica
 
 ## Improvements
 
-It's taking ages to load up the `lap_time` (a good minute or two), There are ways of making this faster but I ran out of time.
+- It's taking ages to load up the `lap_time` (a good minute or two), There are ways of making this faster but I ran out of time.
+
+- In the items returns by driver-summary, there's a small issue how the datetime is deserialized for the `dob` field
+
+```json
+{
+        "driverId": 1,
+        "driverRef": "\"hamilton\"",
+        "forename": "\"Lewis\"",
+        "surname": "\"Hamilton\"",
+        "dob": "0001-01-01T00:00:00",
+        "nationality": "\"British\"",
+        "totalPodiums": 0,
+        "totalRaces": 333
+    }
+```
+
+Still in the migration script, all the `Load...` methods could be made mostly generic.
+
+`LoadItems<T>(string filename)`
+
+I started adding builders for each of the DB entities `IBuilder<T>` but ended up not using it
+
+In pseudo-code, I wanted to do something like this:
+
+```csharp
+private void LoadItems<T>(string filename, string itemtype) 
+    {
+        _logger.Info($"Loading {itemtype}...");
+        var builder = builderFactory.Get(itemtype);
+        using var reader = new StreamReader(filename);
+        var headerLine = reader.ReadLine(); // skip the header
+        if (headerLine == null) return; //probably throw?
+
+        var entities = new List<T>();
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine();
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            try
+            {
+                entities.Add(builder.FromRow(line).Build());
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error parsing lap times... {line} with exception {e.Message}");
+                throw; //Stop the migration and everything
+            }
+
+            if (entities.Count >= BatchSize)
+            {
+                _logger.Info($"Batch size is reached. Inserting {BatchSize} items");
+                Db.InsertAll(entities);
+                entities.Clear();
+            }
+        }
+        
+        Db.InsertAll(entities); //Save the remaining
+    }
+```
+
+There are no tests right now. I know... 

@@ -84,6 +84,7 @@ public class Migration1000 : MigrationBase
 
     private void LoadDrivers()
     {
+        _logger.Info("Loading drivers...");
         using var reader = new StreamReader("./dataset/drivers.csv");
         var headerLine = reader.ReadLine(); // skip the header
         if (headerLine == null) return; //probably throw?
@@ -127,6 +128,7 @@ public class Migration1000 : MigrationBase
 
     private void LoadRaces()
     {
+        _logger.Info("Loading races...");
         using var reader = new StreamReader("./dataset/races.csv");
         var headerLine = reader.ReadLine(); // skip the header
         if (headerLine == null) return; //probably throw?
@@ -180,6 +182,7 @@ public class Migration1000 : MigrationBase
 
     private void LoadDriverStandings()
     {
+        _logger.Info("Loading driver standings...");
         using var reader = new StreamReader("./dataset/driver_standings.csv");
         var headerLine = reader.ReadLine(); // skip the header
         if (headerLine == null) return; //probably throw?
@@ -220,6 +223,7 @@ public class Migration1000 : MigrationBase
 
     private void LoadLapTimes() //That's a very large dataset using COPY FROM in Postgres (bypassing ORM) would be faster
     {
+        _logger.Info("Loading lap times...");
         using var reader = new StreamReader("./dataset/lap_times.csv");
         var headerLine = reader.ReadLine(); // skip the header
         if (headerLine == null) return; //probably throw?
@@ -253,11 +257,12 @@ public class Migration1000 : MigrationBase
                 throw; //Stop the migration and everything
             }
 
-            // if (entities.Count >= BatchSize)
-            // {
-            //     Db.InsertAll(entities);
-            //     entities.Clear();
-            // }
+            if (entities.Count >= BatchSize)
+            {
+                _logger.Info($"Batch size is reached. Inserting {BatchSize} items");
+                Db.InsertAll(entities);
+                entities.Clear();
+            }
         }
         
         Db.InsertAll(entities); //Save the remaining
