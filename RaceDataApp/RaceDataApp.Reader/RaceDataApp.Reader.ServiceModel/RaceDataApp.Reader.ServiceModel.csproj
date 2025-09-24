@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Interfaces" Version="8.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Types\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RaceDataApp.Reader.Domain\RaceDataApp.Reader.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
