@@ -22,8 +22,8 @@ Once the migration has completed, it should look like this
 
 There is an API with two endpoints exposed on port `:5002`
 
-localhost:5002/circuit-summary
-localhost:5002/driver-summary
+- localhost:5002/circuit-summary
+- localhost:5002/driver-summary
 
 for, respectively:
 - A summary per circuit including circuit details, fastest lap across all races and total races completed.
@@ -42,16 +42,14 @@ Given the time constraints I have, I went with it (I would actually not recommen
 and all but poorly documented and run by one guy)
 
 There are two services:
-- The `Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres
+- The `Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres. I could've made this a simple console app but thought I was going to add endpoints on the ingestion end... then I didn't have time to change it to a console app... so it's a web app now.. oh well
 - The `Reader` - that's the API, it's got 2 methods to return
    - A summary per circuit including circuit details, fastest lap across all races and total races completed.
    - A summary per driver including number of times they have been on the podium and the total number of races entered.
 
 There is an _extremely bare bone_ frontend, that's just an Angular app that talks to the `Reader` service. 
 
-ALl of this is orchestrated together by `Aspire` (it's a Docker compose ++ basically). This will spin up the Postgres database
-for you in a Docker container, as well as the other 2 services (and the frontend)
-
+ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basically). This will spin up the Postgres database for you in a Docker container, as well as the other 2 services (and the frontend)
 
 
 ## Improvements
