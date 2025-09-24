@@ -1,0 +1,9 @@
+<div style="padding:1rem">
+  <button (click)="loadSummaries()">Get Summaries</button>
+
+  <div *ngIf="loading">Loading...</div>
+<div>Length: {{ summaries.length }}</div>
+  <pre *ngIf="summaries.length > 0">
+{{ summaries | json }}
+  </pre>
+</div>
