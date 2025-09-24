@@ -8,7 +8,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var username = builder.AddParameter("username", true);
 var password = builder.AddParameter("password", true);
 
-// and supports setting the default database name via an environment variable & running *.sql/*.sh scripts in a bind mount.
+//We are setting the default database name (raceDb) via the init.sql script
 var postgresPort = 5436;
 var postgres = builder.AddPostgres("postgres", username, password, postgresPort)
     .WithPgWeb()
@@ -25,13 +25,20 @@ builder.AddProject<RaceDataApp_Loader>("race-data-loader")
     .WithReference(raceDb)
     .WaitFor(postgres);
 
-builder.AddProject<RaceDataApp_Reader>("race-data-api")
+var raceDataAppApi = builder.AddProject<RaceDataApp_Reader>("race-data-api")
     .WithReference(raceDb)
     .WaitFor(postgres);
 
-builder
-  .AddDockerfile("race-data-ui", "..", "./Engines/Weather/weather_sim_app/Dockerfile")
-  .WithHttpEndpoint(6016, 8080, env: "PORT")
-  .WithExternalHttpEndpoints();
+// builder
+//   .AddDockerfile("race-data-ui", "..", "./Engines/Weather/weather_sim_app/Dockerfile")
+//   .WithHttpEndpoint(6016, 8080, env: "PORT")
+//   .WithExternalHttpEndpoints();
+
+builder.AddNpmApp("angular", "../RaceDataApp.Ui")
+    .WithReference(raceDataAppApi)
+    .WaitFor(raceDataAppApi)
+    .WithHttpEndpoint(env: "PORT")
+    .WithExternalHttpEndpoints()
+    .PublishAsDockerFile();
 
 builder.Build().Run();

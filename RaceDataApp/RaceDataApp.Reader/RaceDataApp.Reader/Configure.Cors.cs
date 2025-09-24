@@ -13,9 +13,24 @@ public class ConfigureCors : IHostingStartup
         builder
             .ConfigureServices(services =>
             {
-                services.AddPlugin(new CorsFeature(allowCredentials: true, allowedOrigins: "http://localhost:4200",
-                    allowedMethods: "GET, POST, PUT, DELETE, OPTIONS",
-                    allowedHeaders: "Content-Type, Authorization, Access-Control-Allow-Origin"));
+                services.AddCors(options => {
+                    options.AddDefaultPolicy(policy => {
+                        policy.WithOrigins(["*"])
+                            //.AllowCredentials()
+                            .WithHeaders(["Content-Type", "Allow", "Authorization"])
+                            .SetPreflightMaxAge(TimeSpan.FromHours(1));
+                    });
+                });
+                services.AddTransient<IStartupFilter, StartupFilter>();
             });
     }
+    
+    public class StartupFilter : IStartupFilter
+    {
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) => app =>
+        {
+            app.UseCors();
+            next(app);
+        };
+    }   
 }

@@ -81,6 +81,8 @@ ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basica
     }
 ```
 
+- In the `RaceDataApp.Reader` (the API) I added super permissive CORS policy that I would obviously have to rework if that were prod software (I did this for the angular app to be able to talk to the backend, since Aspire was generating a new port each time, I couldn't easily add a known list of `allowedOrigins`)
+
 Still in the migration script, all the `Load...` methods could be made mostly generic.
 
 `LoadItems<T>(string filename)`
