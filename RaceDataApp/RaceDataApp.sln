@@ -1,0 +1,93 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.0.0
+MinimumVisualStudioVersion = 17.8.0.0
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaceDataApp.AppHost", "RaceDataApp.AppHost\RaceDataApp.AppHost.csproj", "{97841782-68C7-41EE-9310-C6B7A5D78ED2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Loader", "RaceDataApp.Loader\RaceDataApp.Loader\RaceDataApp.Loader.csproj", "{22B19A7A-7CCE-4FE9-B15D-1342D49B656A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loader", "Loader", "{B40391F5-C521-42F4-A925-471D38FE5A60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Loader.ServiceInterface", "RaceDataApp.Loader\RaceDataApp.Loader.ServiceInterface\RaceDataApp.Loader.ServiceInterface.csproj", "{1D565A9A-F7FE-42DE-A5B9-46DCC849E973}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Loader.ServiceModel", "RaceDataApp.Loader\RaceDataApp.Loader.ServiceModel\RaceDataApp.Loader.ServiceModel.csproj", "{54494C22-73B8-418A-97EE-A04A016E7BDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Loader.Tests", "RaceDataApp.Loader\RaceDataApp.Loader.Tests\RaceDataApp.Loader.Tests.csproj", "{16ED3F80-B435-4280-924F-CD7328665E24}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reader", "Reader", "{8C141C5D-6F33-4641-BEAB-ABE260E54617}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader", "RaceDataApp.Reader\RaceDataApp.Reader\RaceDataApp.Reader.csproj", "{40EC6203-C6FC-466A-8C7C-9258C443F2C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.ServiceInterface", "RaceDataApp.Reader\RaceDataApp.Reader.ServiceInterface\RaceDataApp.Reader.ServiceInterface.csproj", "{4794D39C-1FBD-412A-A252-7FDB6F588126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.ServiceModel", "RaceDataApp.Reader\RaceDataApp.Reader.ServiceModel\RaceDataApp.Reader.ServiceModel.csproj", "{5B9D7F75-9B31-42F4-9DE3-A643C6071207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.Tests", "RaceDataApp.Reader\RaceDataApp.Reader.Tests\RaceDataApp.Reader.Tests.csproj", "{7E56FFA7-5431-4485-B773-2C2C2993E7CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.Domain", "RaceDataApp.Reader.Domain\RaceDataApp.Reader.Domain.csproj", "{9CD42994-FFBE-4ACB-B003-5557B2079DEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97841782-68C7-41EE-9310-C6B7A5D78ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97841782-68C7-41EE-9310-C6B7A5D78ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97841782-68C7-41EE-9310-C6B7A5D78ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97841782-68C7-41EE-9310-C6B7A5D78ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B19A7A-7CCE-4FE9-B15D-1342D49B656A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B19A7A-7CCE-4FE9-B15D-1342D49B656A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B19A7A-7CCE-4FE9-B15D-1342D49B656A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B19A7A-7CCE-4FE9-B15D-1342D49B656A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D565A9A-F7FE-42DE-A5B9-46DCC849E973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D565A9A-F7FE-42DE-A5B9-46DCC849E973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D565A9A-F7FE-42DE-A5B9-46DCC849E973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D565A9A-F7FE-42DE-A5B9-46DCC849E973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54494C22-73B8-418A-97EE-A04A016E7BDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54494C22-73B8-418A-97EE-A04A016E7BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54494C22-73B8-418A-97EE-A04A016E7BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54494C22-73B8-418A-97EE-A04A016E7BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16ED3F80-B435-4280-924F-CD7328665E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16ED3F80-B435-4280-924F-CD7328665E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16ED3F80-B435-4280-924F-CD7328665E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16ED3F80-B435-4280-924F-CD7328665E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40EC6203-C6FC-466A-8C7C-9258C443F2C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40EC6203-C6FC-466A-8C7C-9258C443F2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40EC6203-C6FC-466A-8C7C-9258C443F2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40EC6203-C6FC-466A-8C7C-9258C443F2C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4794D39C-1FBD-412A-A252-7FDB6F588126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4794D39C-1FBD-412A-A252-7FDB6F588126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4794D39C-1FBD-412A-A252-7FDB6F588126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4794D39C-1FBD-412A-A252-7FDB6F588126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B9D7F75-9B31-42F4-9DE3-A643C6071207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B9D7F75-9B31-42F4-9DE3-A643C6071207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B9D7F75-9B31-42F4-9DE3-A643C6071207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B9D7F75-9B31-42F4-9DE3-A643C6071207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E56FFA7-5431-4485-B773-2C2C2993E7CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E56FFA7-5431-4485-B773-2C2C2993E7CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E56FFA7-5431-4485-B773-2C2C2993E7CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E56FFA7-5431-4485-B773-2C2C2993E7CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E59615B-050F-4BAF-AA58-DB52D7028EFB}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{22B19A7A-7CCE-4FE9-B15D-1342D49B656A} = {B40391F5-C521-42F4-A925-471D38FE5A60}
+		{1D565A9A-F7FE-42DE-A5B9-46DCC849E973} = {B40391F5-C521-42F4-A925-471D38FE5A60}
+		{54494C22-73B8-418A-97EE-A04A016E7BDE} = {B40391F5-C521-42F4-A925-471D38FE5A60}
+		{16ED3F80-B435-4280-924F-CD7328665E24} = {B40391F5-C521-42F4-A925-471D38FE5A60}
+		{40EC6203-C6FC-466A-8C7C-9258C443F2C4} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+		{4794D39C-1FBD-412A-A252-7FDB6F588126} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+		{5B9D7F75-9B31-42F4-9DE3-A643C6071207} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+		{7E56FFA7-5431-4485-B773-2C2C2993E7CC} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+		{9CD42994-FFBE-4ACB-B003-5557B2079DEB} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+	EndGlobalSection
+EndGlobal
