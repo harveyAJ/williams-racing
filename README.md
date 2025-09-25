@@ -22,19 +22,19 @@ Open up the `RaceDataApp.sln`
 
 The Aspire dashboard should pop up and you can view the different resources in there.
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 you can click on pgweb to view the data (once it's loaded - it will take some time). Select `racedb` and click Connect
 
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 Once the migration has completed, it should look like this:
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 You can view logs for each of the services, like so:
 
-![alt text](image-3.png)
+![alt text](images/image-3.png)
 
 There is an API with two endpoints exposed on port `:5002`
 
@@ -53,18 +53,18 @@ otherwise the output will look :poo:
 
 Here's an example of what the query returns
 
-![alt text](image-4.png)
+![alt text](images/image-4.png)
 
 Also available via the Aspire dashboard is the web frontend:
 
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 which should pop open the Angular app (this is directly taken from [one of these samples](https://github.com/dotnet/aspire-samples/tree/main))
 
 
 ...from which I've exposed one of the two endpoints above to retrieve driver summaries, which you can load up to screen by clicking the button:
 
-![alt text](image-7.png)
+![alt text](images/image-7.png)
 
 
 ## Design
