@@ -4,6 +4,7 @@
 
 - net8 SDK
 - Docker daemon running (e.g. via Docker Desktop. Aspire requires it)
+- Node v20
 
 ## Prep before running
 
@@ -18,7 +19,7 @@ npm install
 
 Open up the `RaceDataApp.sln`
 
-`RaceDataApp.AppHost` is the Aspire orchestrator, which will spin up all the services. THe first time you run it, it will take quite abit of time for the data to be persisted to the DB.
+`RaceDataApp.AppHost` is the Aspire orchestrator, which will spin up all the services. THe first time you run it, it will take **quite abit of time** for the data to be persisted to the DB. Once the parsing and migration of all the CSVs into Postgres has been performed, it won't be run again for subsequent runs (unless you manually destroy the relevant postgres container...)
 
 The Aspire dashboard should pop up and you can view the different resources in there.
 
@@ -65,6 +66,10 @@ which should pop open the Angular app (this is directly taken from [one of these
 ...from which I've exposed one of the two endpoints above to retrieve driver summaries, which you can load up to screen by clicking the button:
 
 ![alt text](images/image-7.png)
+
+Note that once you've run the program once, the migration won't be run again, since stopping Aspire won't destroy the postgres container:
+
+![alt text](images/image-8.png)
 
 
 ## Design
