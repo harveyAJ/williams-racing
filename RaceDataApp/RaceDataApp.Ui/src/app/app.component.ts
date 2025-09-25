@@ -1,10 +1,8 @@
 import { Component, Injectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { WeatherForecasts } from '../types/weatherForecast';
-import { DriverSummaryService, DriverSummary, DriverSummaries } from './driver-summary.service';
+import { DriverSummaryService } from './driver-summary.service';
+import { DriverSummary, DriverSummaries } from '../types/driverSummary';
 
 @Injectable()
 @Component({
@@ -16,18 +14,8 @@ import { DriverSummaryService, DriverSummary, DriverSummaries } from './driver-s
 })
 export class AppComponent {
   title = 'Race Data';
-  //forecasts: WeatherForecasts = [];
   summaries: DriverSummaries = [];
   loading = false;
-
-  // constructor(private http: HttpClient) {
-  //   http.get<WeatherForecasts>('api/weatherforecast').subscribe({
-  //     next: result => this.forecasts = result,
-  //     error: console.error
-  //   });
-  // }
-
-  //constructor(private http: HttpClient) {}
 
   constructor(private driverSummaryService: DriverSummaryService) {}
 

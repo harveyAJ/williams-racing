@@ -2,7 +2,17 @@
 
 ## Prerequisites
 
-Docker daemon running (Aspire requires it)
+- net8 SDK
+- Docker daemon running (e.g. via Docker Desktop. Aspire requires it)
+
+## Prep before running
+
+There's a little Angular web frontend in this solution. Aspire won't install the npm packages automatically so you have to 
+
+```
+cd RaceDataApp/RaceDataApp.Ui
+npm install
+```
 
 ## How to run 
 
@@ -18,7 +28,7 @@ you can click on pgweb to view the data (once it's loaded - it will take some ti
 
 ![alt text](image-1.png)
 
-Once the migration has completed, it should look like this
+Once the migration has completed, it should look like this:
 
 ![alt text](image-2.png)
 
@@ -45,6 +55,18 @@ Here's an example of what the query returns
 
 ![alt text](image-4.png)
 
+Also available via the Aspire dashboard is the web frontend:
+
+![alt text](image-5.png)
+
+which should pop open the Angular app (this is directly taken from [one of these samples](https://github.com/dotnet/aspire-samples/tree/main))
+
+
+...from which I've exposed one of the two endpoints above to retrieve driver summaries, which you can load up to screen by clicking the button:
+
+![alt text](image-7.png)
+
+
 ## Design
 
 I've used ServiceStack to design the backend. No good reasons, I just used it before and could move pretty quickly with it. 
@@ -52,19 +74,23 @@ Given the time constraints I have, I went with it (I would actually not recommen
 and all but poorly documented and run by one guy)
 
 There are two services:
-- The `Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres. I could've made this a simple console app but thought I was going to add endpoints on the ingestion end... then I didn't have time to change it to a console app... so it's a web app now.. oh well
-- The `Reader` - that's the API, it's got 2 methods to return
+- The `RaceDataApp.Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres. I could've made this a simple console app but thought I was going to add endpoints on the ingestion end... then I didn't have time to change it to a console app... so it's a web app now.. oh well
+- The `RaceDataApp.Reader` - that's the API, it's got 2 methods to return
    - A summary per circuit including circuit details, fastest lap across all races and total races completed.
    - A summary per driver including number of times they have been on the podium and the total number of races entered.
-
-There is an _extremely bare bone_ frontend, that's just an Angular app that talks to the `Reader` service. 
+- The `RaceDataApp.Ui` - an _extremely bare bone_ frontend, that's just an Angular app that talks to the `Reader` service.
+- The `RaceDataApp.AppHost` is the Aspire service that bundles everything up together
 
 ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basically). This will spin up the Postgres database for you in a Docker container, as well as the other 2 services (and the frontend)
 
 
 ## Improvements
 
-- It's taking ages to load up the `lap_time` (a good minute or two), There are ways of making this faster but I ran out of time.
+- It's taking ages to load up the `lap_time` (a few minutes), There are ways of making this faster but I ran out of time (e.g. removing all the constraints such as primary and foreign keys before inserting the data.. add the constraints once all data is loaded OR use `COPY`)
+
+This is the time it's taken on my machine:
+
+`Completed Migration1000 in 272.944s`
 
 - In the items returns by driver-summary, there's a small issue how the datetime is deserialized for the `dob` field
 

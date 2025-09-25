@@ -1,19 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface DriverSummary {
-  driverId: number;
-  driverRef: string;
-  forename: string;
-  surname: string;
-  dob: string;
-  nationality: string;
-  totalPodiums: number;
-  totalRaces: number;
-}
-
-export type DriverSummaries = DriverSummary[];
+import { DriverSummary } from '../types/driverSummary';
 
 @Injectable({
   providedIn: 'root'
