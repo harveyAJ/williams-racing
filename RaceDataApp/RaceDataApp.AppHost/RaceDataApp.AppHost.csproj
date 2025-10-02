@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RaceDataApp.Loader\RaceDataApp.Loader.Console\RaceDataApp.Loader.Console.csproj" />
     <ProjectReference Include="..\RaceDataApp.Loader\RaceDataApp.Loader\RaceDataApp.Loader.csproj" />
     <ProjectReference Include="..\RaceDataApp.Reader\RaceDataApp.Reader\RaceDataApp.Reader.csproj" />
   </ItemGroup>

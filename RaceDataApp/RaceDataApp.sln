@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Reader.Domain", "RaceDataApp.Reader.Domain\RaceDataApp.Reader.Domain.csproj", "{9CD42994-FFBE-4ACB-B003-5557B2079DEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDataApp.Loader.Console", "RaceDataApp.Loader\RaceDataApp.Loader.Console\RaceDataApp.Loader.Console.csproj", "{917FF295-01E2-4417-81E3-11581D64B36A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CD42994-FFBE-4ACB-B003-5557B2079DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{917FF295-01E2-4417-81E3-11581D64B36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917FF295-01E2-4417-81E3-11581D64B36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917FF295-01E2-4417-81E3-11581D64B36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917FF295-01E2-4417-81E3-11581D64B36A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,5 +95,6 @@ Global
 		{5B9D7F75-9B31-42F4-9DE3-A643C6071207} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
 		{7E56FFA7-5431-4485-B773-2C2C2993E7CC} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
 		{9CD42994-FFBE-4ACB-B003-5557B2079DEB} = {8C141C5D-6F33-4641-BEAB-ABE260E54617}
+		{917FF295-01E2-4417-81E3-11581D64B36A} = {B40391F5-C521-42F4-A925-471D38FE5A60}
 	EndGlobalSection
 EndGlobal

@@ -21,20 +21,20 @@ var postgres = builder.AddPostgres("postgres", username, password, postgresPort)
 var raceDbName = "racedb";
 var raceDb = postgres.AddDatabase(raceDbName);
 
-builder.AddProject<RaceDataApp_Loader>("race-data-loader")
+var migrations = builder.AddProject<RaceDataApp_Loader>("race-data-loader")
     .WithReference(raceDb)
     .WaitFor(postgres);
+
+// var migrations = builder.AddProject<RaceDataApp_Loader_Console>("migrations")
+//     .WithReference(raceDb)
+//     .WithReference(postgres);
 
 var raceDataAppApi = builder.AddProject<RaceDataApp_Reader>("race-data-api")
     .WithReference(raceDb)
+    .WithReference(migrations)
     .WaitFor(postgres);
 
-// builder
-//   .AddDockerfile("race-data-ui", "..", "./Engines/Weather/weather_sim_app/Dockerfile")
-//   .WithHttpEndpoint(6016, 8080, env: "PORT")
-//   .WithExternalHttpEndpoints();
-
-builder.AddNpmApp("angular", "../RaceDataApp.Ui")
+builder.AddNpmApp("race-data-ui", "../RaceDataApp.Ui")
     .WithReference(raceDataAppApi)
     .WaitFor(raceDataAppApi)
     .WithHttpEndpoint(env: "PORT")

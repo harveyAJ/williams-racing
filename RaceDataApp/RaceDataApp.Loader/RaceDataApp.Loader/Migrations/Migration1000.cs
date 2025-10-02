@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Npgsql;
 using RaceDataApp.Loader.Entities;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Logging;
@@ -22,9 +23,17 @@ public class Migration1000 : MigrationBase
         Db.CreateTableIfNotExists<LapTime>();
         Db.ExecuteSql(@"
         ALTER TABLE ""lap_time"" DROP CONSTRAINT IF EXISTS ""lap_time_pkey"";
-        ALTER TABLE ""lap_time"" ADD CONSTRAINT ""lap_time_pkey"" PRIMARY KEY (""race_id"", ""driver_id"", ""lap"");
         ");
         SeedData();
+        Db.ExecuteSql(@"
+        ALTER TABLE ""lap_time"" ADD CONSTRAINT ""lap_time_pkey"" PRIMARY KEY (""race_id"", ""driver_id"", ""lap"");
+        ");
+        Db.ExecuteSql(@"
+        ALTER TABLE ""lap_time"" DROP CONSTRAINT IF EXISTS ""FK_lap_time_race_RaceId"";
+        ALTER TABLE ""lap_time"" ADD CONSTRAINT ""FK_lap_time_race_RaceId"" FOREIGN KEY (race_id) REFERENCES race(race_id) ON UPDATE CASCADE ON DELETE CASCADE;
+        ALTER TABLE ""lap_time"" DROP CONSTRAINT IF EXISTS ""FK_lap_time_driver_DriverId"";
+        ALTER TABLE ""lap_time"" ADD CONSTRAINT ""FK_lap_time_driver_DriverId"" FOREIGN KEY (driver_id) REFERENCES driver(driver_id) ON UPDATE CASCADE ON DELETE CASCADE;
+            ");
     }
 
     public override void Down()
@@ -44,7 +53,7 @@ public class Migration1000 : MigrationBase
         LoadDrivers();
         LoadRaces();
         LoadDriverStandings();
-        LoadLapTimes();
+        LoadLapTimes().Wait();
     }
 
     private void LoadCircuits()
@@ -221,54 +230,29 @@ public class Migration1000 : MigrationBase
         Db.SaveAll(races);
     }
 
-    private void LoadLapTimes() //That's a very large dataset using COPY FROM in Postgres (bypassing ORM) would be faster
+    private async Task LoadLapTimes()
     {
-        _logger.Info("Loading lap times...");
-        using var reader = new StreamReader("./dataset/lap_times.csv");
-        var headerLine = reader.ReadLine(); // skip the header
-        if (headerLine == null) return; //probably throw?
-
-        var entities = new List<LapTime>();
-        while (!reader.EndOfStream)
+        var npgsqlConn = (NpgsqlConnection)Db.ToDbConnection();
+        if (npgsqlConn.State != System.Data.ConnectionState.Open)
         {
-            var line = reader.ReadLine();
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+            await npgsqlConn.OpenAsync();
+        }
 
-            var parts = line.Split(',');
+        await using var writer = await npgsqlConn.BeginTextImportAsync(
+            "COPY lap_time (race_id, driver_id, lap, position, time, milliseconds) FROM STDIN (FORMAT CSV, HEADER true)");
 
-            try
+        using var file = new StreamReader("./dataset/lap_times.csv");
+        while (!file.EndOfStream)
+        {
+            var line = await file.ReadLineAsync();
+            if (!string.IsNullOrWhiteSpace(line))
             {
-                entities.Add(new LapTime
-                {
-                    RaceId       = int.Parse(parts[0]),
-                    DriverId     = int.Parse(parts[1]),
-                    Lap          = int.Parse(parts[2]),
-                    Position     = int.Parse(parts[3]),
-                    Time         = parts[4].Trim('"'),
-                    Milliseconds = int.Parse(parts[5])
-                });
-            }
-            catch (Exception e)
-            {
-                _logger.Error($"Error parsing lap times... {line} with exception {e.Message}");
-                throw; //Stop the migration and everything
-            }
-
-            if (entities.Count >= BatchSize)
-            {
-                _logger.Info($"Batch size is reached. Inserting {BatchSize} items");
-                Db.InsertAll(entities);
-                entities.Clear();
+                await writer.WriteLineAsync(line);
             }
         }
-        
-        Db.InsertAll(entities); //Save the remaining
+
+        await writer.FlushAsync();
     }
-    
-    private const int BatchSize = 5000;
     
     private static DateTime? ParseDate(string value) =>
         string.IsNullOrWhiteSpace(value) || value == "\\N"
