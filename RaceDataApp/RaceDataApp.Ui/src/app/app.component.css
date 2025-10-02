@@ -216,3 +216,20 @@ td {
   justify-content: center;
   margin-left: 1rem;
 }
+
+.load-btn {
+  background-color: #007bff;    /* Primary blue */
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 25px;          /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;          /* Space between button and table */
+}
+
+.load-btn:hover {
+  background-color: #0056b3;    /* Darker blue on hover */
+}
