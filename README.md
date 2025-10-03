@@ -37,7 +37,7 @@ npm install
 
 Open up the `RaceDataApp.sln`
 
-`RaceDataApp.AppHost` is the Aspire orchestrator, which will spin up all the services. THe first time you run it, it will take **quite abit of time** for the data to be persisted to the DB. Once the parsing and migration of all the CSVs into Postgres has been performed, it won't be run again for subsequent runs (unless you manually destroy the relevant postgres container...)
+`RaceDataApp.AppHost` is the Aspire orchestrator, which will spin up all the services. ~~THe first time you run it, it will take **quite abit of time** for the data to be persisted to the DB~~. Once the parsing and migration of all the CSVs into Postgres has been performed, it won't be run again for subsequent runs (unless you manually destroy the relevant postgres container...)
 
 The Aspire dashboard should pop up and you can view the different resources in there.
 
@@ -100,7 +100,7 @@ There are two services:
 - The `RaceDataApp.Ui` - an _extremely bare bone_ frontend, that's just an Angular app that talks to the `Reader` service.
 - The `RaceDataApp.AppHost` is the Aspire service that bundles everything up together
 
-ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basically). This will spin up the Postgres database for you in a Docker container, as well as the other 2 services (and the frontend)
+All of this is orchestrated together by `Aspire` (it's a Docker compose++ basically). This will spin up the Postgres database for you in a Docker container, as well as the other 2 services (and the frontend)
 
 
 ## Improvements
@@ -169,4 +169,6 @@ private void LoadItems<T>(string filename, string itemtype)
     }
 ```
 
-There are no tests right now. I know... 
+## Testing
+
+I've added a couple of tests around the loader and reader services. In prod, I'd aim for a much higher test coverage (esp integration tests, not so much for unit tests which often add little value)

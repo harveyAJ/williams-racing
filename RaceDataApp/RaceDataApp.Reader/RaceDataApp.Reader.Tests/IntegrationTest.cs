@@ -1,6 +1,9 @@
+using FluentAssertions;
 using Funq;
+using Moq;
 using ServiceStack;
 using NUnit.Framework;
+using RaceDataApp.Reader.Domain.Entities;
 using RaceDataApp.Reader.ServiceInterface;
 using RaceDataApp.Reader.ServiceModel;
 
@@ -10,13 +13,23 @@ public class IntegrationTest
 {
     const string BaseUri = "http://localhost:2000/";
     private readonly ServiceStackHost _appHost;
-
+    private static readonly List<CircuitSummary> ExpectedSummaries = [new() { CircuitId = 123 }];
+    
     class AppHost : AppSelfHostBase
     {
+        private readonly Mock<ICommandExecutor> _commandExecutorMock = new();
+        private readonly Mock<IAsyncCommand<CircuitSummaryRequest, List<CircuitSummary>>> _circuitSummaryCommandMock = new();
+        
         public AppHost() : base(nameof(IntegrationTest), typeof(RaceDataQueryService).Assembly) { }
 
         public override void Configure(Container container)
         {
+            _circuitSummaryCommandMock.Setup(x => x.Result)
+                .Returns(ExpectedSummaries);
+            _commandExecutorMock.Setup(x => x.Command<IAsyncCommand<CircuitSummaryRequest, List<CircuitSummary>>>())
+                .Returns(_circuitSummaryCommandMock.Object);
+            container.AddSingleton(_commandExecutorMock.Object);
+            container.AddTransient<RaceDataQueryService>();
         }
     }
 
@@ -39,6 +52,6 @@ public class IntegrationTest
 
         var response = client.Get(new CircuitSummaryRequest());
 
-        //Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+        response.Should().BeEquivalentTo(ExpectedSummaries);
     }
 }
