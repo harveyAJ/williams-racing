@@ -105,6 +105,8 @@ All of this is orchestrated together by `Aspire` (it's a Docker compose++ basica
 
 ## Improvements
 
+The queries should 100% be tested in a real environment. For this, I'd use [Testcontainers](https://testcontainers.com/guides/getting-started-with-testcontainers-for-dotnet/) for spinning up a Postgres, I'd load up a tiny subset of data and test out the queries like this...
+
 ~~- It's taking ages to load up the `lap_time` (a few minutes), There are ways of making this faster but I ran out of time (e.g. removing all the constraints such as primary and foreign keys before inserting the data.. add the constraints once all data is loaded OR use `COPY`)~~
 
 ~~This is the time it's taken on my machine:~~

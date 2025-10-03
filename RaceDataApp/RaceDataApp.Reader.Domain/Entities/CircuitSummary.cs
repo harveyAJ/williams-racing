@@ -22,5 +22,5 @@ public class CircuitSummary
     
     public int FastestLapMs { get; set; }
     
-    public int TotalLaps { get; set; }
+    public int TotalRaces { get; set; }
 }
