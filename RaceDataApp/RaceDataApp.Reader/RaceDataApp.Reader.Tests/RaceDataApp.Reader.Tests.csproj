@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\RaceDataApp.Loader\RaceDataApp.Loader\RaceDataApp.Loader.csproj" />
     <ProjectReference Include="..\RaceDataApp.Reader.ServiceInterface\RaceDataApp.Reader.ServiceInterface.csproj" />
     <ProjectReference Include="..\RaceDataApp.Reader.ServiceModel\RaceDataApp.Reader.ServiceModel.csproj" />
+    <PackageReference Include="FluentAssertions" Version="8.7.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
 
     <PackageReference Include="NUnit" Version="3.13.*" />
@@ -19,12 +20,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <PackageReference Include="ServiceStack" Version="8.*" />
     <PackageReference Include="ServiceStack.Kestrel" Version="8.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\fluentassertions\8.7.1\lib\net6.0\FluentAssertions.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
