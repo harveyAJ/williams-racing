@@ -3,7 +3,7 @@ using RaceDataApp.Loader.ServiceInterface;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
-services.AddServiceStack(typeof(MyServices).Assembly);
+services.AddServiceStack(typeof(RaceDataLoaderService).Assembly);
 
 var app = builder.Build();
 

@@ -1,3 +1,4 @@
+using FluentAssertions;
 using NUnit.Framework;
 using ServiceStack;
 using ServiceStack.Testing;
@@ -8,24 +9,24 @@ namespace RaceDataApp.Loader.Tests;
 
 public class UnitTest
 {
-    private readonly ServiceStackHost appHost;
+    private readonly ServiceStackHost _appHost;
 
     public UnitTest()
     {
-        appHost = new BasicAppHost().Init();
-        appHost.Container.AddTransient<MyServices>();
+        _appHost = new BasicAppHost().Init();
+        _appHost.Container.AddTransient<RaceDataLoaderService>();
     }
 
     [OneTimeTearDown]
-    public void OneTimeTearDown() => appHost.Dispose();
+    public void OneTimeTearDown() => _appHost.Dispose();
 
     [Test]
-    public void Can_call_MyServices()
+    public void Can_call_RaceDataLoaderService()
     {
-        var service = appHost.Container.Resolve<MyServices>();
+        var service = _appHost.Container.Resolve<RaceDataLoaderService>();
 
-        var response = (HelloResponse)service.Any(new Hello { Name = "World" });
+        var response = (SaveDriverResponse)service.Post(new SaveDriver { Forename = "Valentin" });
 
-        Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+        response.DriverId.Should().Be(123);
     }
 }

@@ -1,5 +1,7 @@
+using FluentAssertions;
+using Moq;
 using NUnit.Framework;
-using RaceDataApp.Loader.Entities;
+using RaceDataApp.Reader.Domain.Entities;
 using ServiceStack;
 using ServiceStack.Testing;
 using RaceDataApp.Reader.ServiceInterface;
@@ -9,24 +11,33 @@ namespace RaceDataApp.Reader.Tests;
 
 public class UnitTest
 {
-    private readonly ServiceStackHost appHost;
-
+    private readonly ServiceStackHost _appHost;
+    private readonly Mock<ICommandExecutor> _commandExecutorMock = new();
+    private readonly Mock<IAsyncCommand<CircuitSummaryRequest, List<CircuitSummary>>> _circuitSummaryCommandMock = new();
+    private readonly Mock<IAsyncCommand<DriverSummaryRequest, List<DriverSummary>>> _driverSummaryCommandMock = new();
+    private readonly List<CircuitSummary> _expectedSummaries = [new() { CircuitId = 123 }];
+    
     public UnitTest()
     {
-        appHost = new BasicAppHost().Init();
-        appHost.Container.AddTransient<RaceDataQueryService>();
+        _appHost = new BasicAppHost().Init();
+        _circuitSummaryCommandMock.Setup(x => x.Result)
+            .Returns(_expectedSummaries);
+        _commandExecutorMock.Setup(x => x.Command<IAsyncCommand<CircuitSummaryRequest, List<CircuitSummary>>>())
+            .Returns(_circuitSummaryCommandMock.Object);
+        _appHost.Container.AddSingleton(_commandExecutorMock.Object);
+        _appHost.Container.AddTransient<RaceDataQueryService>();
     }
 
     [OneTimeTearDown]
-    public void OneTimeTearDown() => appHost.Dispose();
+    public void OneTimeTearDown() => _appHost.Dispose();
 
     [Test]
-    public void Can_call_RaceDataQueryServices()
+    public async Task Can_call_RaceDataQueryServices()
     {
-        // var service = appHost.Container.Resolve<MyServices>();
-        //
-        // var response = (HelloResponse)service.Any(new Hello { Name = "World" });
-        //
-        // Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+        var service = _appHost.Container.Resolve<RaceDataQueryService>();
+        
+        var response = await service.GetAsync(new CircuitSummaryRequest());
+        
+        response.Should().BeEquivalentTo(_expectedSummaries);
     }
 }

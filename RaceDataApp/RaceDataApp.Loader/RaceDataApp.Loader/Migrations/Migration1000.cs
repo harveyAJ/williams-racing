@@ -52,7 +52,7 @@ public class Migration1000 : MigrationBase
         LoadCircuits();
         LoadDrivers();
         LoadRaces();
-        LoadDriverStandings();
+        LoadDriverStandings().Wait();
         LoadLapTimes().Wait();
     }
 
@@ -189,49 +189,34 @@ public class Migration1000 : MigrationBase
         Db.SaveAll(races);
     }
 
-    private void LoadDriverStandings()
+    private async Task LoadDriverStandings()
     {
         _logger.Info("Loading driver standings...");
-        using var reader = new StreamReader("./dataset/driver_standings.csv");
-        var headerLine = reader.ReadLine(); // skip the header
-        if (headerLine == null) return; //probably throw?
-
-        var races = new List<DriverStanding>();
-        while (!reader.EndOfStream)
+        var npgsqlConn = (NpgsqlConnection)Db.ToDbConnection();
+        if (npgsqlConn.State != System.Data.ConnectionState.Open)
         {
-            var line = reader.ReadLine();
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+            await npgsqlConn.OpenAsync();
+        }
 
-            var parts = line.Split(',');
+        await using var writer = await npgsqlConn.BeginTextImportAsync(
+            "COPY driver_standing (driver_standings_id, race_id, driver_id, points, position, position_text, wins) FROM STDIN (FORMAT CSV, HEADER true)");
 
-            try
+        using var file = new StreamReader("./dataset/driver_standings.csv");
+        while (!file.EndOfStream)
+        {
+            var line = await file.ReadLineAsync();
+            if (!string.IsNullOrWhiteSpace(line))
             {
-                races.Add(new DriverStanding
-                {
-                    DriverStandingsId = int.Parse(parts[0]),
-                    RaceId            = int.Parse(parts[1]),
-                    DriverId          = int.Parse(parts[2]),
-                    Points            = decimal.Parse(parts[3], CultureInfo.InvariantCulture),
-                    Position          = parts[4] == @"\N" ? null : int.Parse(parts[4]),
-                    PositionText      = parts[5].Trim('"'),
-                    Wins              = int.Parse(parts[6])
-                });
-            }
-            catch (Exception e)
-            {
-                _logger.Error($"Error parsing driver standings... {line} with exception {e.Message}");
-                throw; //Stop the migration and everything
+                await writer.WriteLineAsync(line);
             }
         }
-        
-        Db.SaveAll(races);
-    }
 
+        await writer.FlushAsync();
+    }
+    
     private async Task LoadLapTimes()
     {
+        _logger.Info("Loading lap times...");
         var npgsqlConn = (NpgsqlConnection)Db.ToDbConnection();
         if (npgsqlConn.State != System.Data.ConnectionState.Open)
         {

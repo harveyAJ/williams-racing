@@ -6,6 +6,24 @@
 - Docker daemon running (e.g. via Docker Desktop. Aspire requires it)
 - Node v20
 
+## Tech stack
+
+### Backend
+
+- C#
+- [ServiceStack](https://servicestack.net/) (fancy wrapper around asp.net stuff)
+- Moq for mocking in tests
+- NUnit for testing (I prefer xUnit in real life)
+
+### Frontend
+
+- Node, Angular, Typescript etc
+
+### Orchestration
+
+- [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
+- Docker engine
+
 ## Prep before running
 
 There's a little Angular web frontend in this solution. Aspire won't install the npm packages automatically so you have to 
@@ -23,19 +41,19 @@ Open up the `RaceDataApp.sln`
 
 The Aspire dashboard should pop up and you can view the different resources in there.
 
-![alt text](images/image.png)
+![alt text](images/aspire-dashboard.png)
 
 you can click on pgweb to view the data (once it's loaded - it will take some time). Select `racedb` and click Connect
 
-![alt text](images/image-1.png)
+![alt text](images/pgweb.png)
 
 Once the migration has completed, it should look like this:
 
-![alt text](images/image-2.png)
+![alt text](images/pgweb2.png)
 
 You can view logs for each of the services, like so:
 
-![alt text](images/image-3.png)
+![alt text](images/aspire-logs.png)
 
 There is an API with two endpoints exposed on port `:5002`
 
@@ -54,22 +72,18 @@ otherwise the output will look :poo:
 
 Here's an example of what the query returns
 
-![alt text](images/image-4.png)
+![alt text](images/postman.png)
 
-Also available via the Aspire dashboard is the web frontend:
-
-![alt text](images/image-5.png)
-
-which should pop open the Angular app (this is directly taken from [one of these samples](https://github.com/dotnet/aspire-samples/tree/main))
+Also available via the Aspire dashboard is the web frontend `race-data-ui`. Clicking on the URL should pop open the Angular app in your browser (this is directly taken from [one of these samples](https://github.com/dotnet/aspire-samples/tree/main))
 
 
 ...from which I've exposed one of the two endpoints above to retrieve driver summaries, which you can load up to screen by clicking the button:
 
-![alt text](images/image-7.png)
+![alt text](images/frontent.png)
 
 Note that once you've run the program once, the migration won't be run again, since stopping Aspire won't destroy the postgres container:
 
-![alt text](images/image-8.png)
+![alt text](images/docker-desktop.png)
 
 
 ## Design
@@ -79,7 +93,7 @@ Given the time constraints I have, I went with it (I would actually not recommen
 and all but poorly documented and run by one guy)
 
 There are two services:
-- The `RaceDataApp.Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres. I could've made this a simple console app but thought I was going to add endpoints on the ingestion end... then I didn't have time to change it to a console app... so it's a web app now.. oh well
+- The `RaceDataApp.Loader` - basically it's just a migration script, it loads up the CSV data and insert it into Postgres. I could've made this a simple console app but thought I was going to add endpoints on the ingestion end... then I didn't have time to change it to a console app... so it's a web app now.. oh well. I've added a couple of stubs for endpoints (`SaveDriver` or `SaveCircuit` as examples)
 - The `RaceDataApp.Reader` - that's the API, it's got 2 methods to return
    - A summary per circuit including circuit details, fastest lap across all races and total races completed.
    - A summary per driver including number of times they have been on the podium and the total number of races entered.
@@ -91,26 +105,19 @@ ALl of this is orchestrated together by `Aspire` (it's a Docker compose++ basica
 
 ## Improvements
 
-- It's taking ages to load up the `lap_time` (a few minutes), There are ways of making this faster but I ran out of time (e.g. removing all the constraints such as primary and foreign keys before inserting the data.. add the constraints once all data is loaded OR use `COPY`)
+~~- It's taking ages to load up the `lap_time` (a few minutes), There are ways of making this faster but I ran out of time (e.g. removing all the constraints such as primary and foreign keys before inserting the data.. add the constraints once all data is loaded OR use `COPY`)~~
 
-This is the time it's taken on my machine:
+~~This is the time it's taken on my machine:~~
 
-`Completed Migration1000 in 272.944s`
+~~`Completed Migration1000 in 272.944s~~
 
-- In the items returns by driver-summary, there's a small issue how the datetime is deserialized for the `dob` field
+I've made changes to the code whereby I now stop relying on the ORM to insert/insert all data as it's apparently painfully slow.
 
-```json
-{
-        "driverId": 1,
-        "driverRef": "\"hamilton\"",
-        "forename": "\"Lewis\"",
-        "surname": "\"Hamilton\"",
-        "dob": "0001-01-01T00:00:00",
-        "nationality": "\"British\"",
-        "totalPodiums": 0,
-        "totalRaces": 333
-    }
-```
+I'm relying instead on a lower level Postgres command `COPY FROM` to copy data from the CSV into the table. It's much faster. I initially thought removing the constraint (foreing and primary key) would speed up the insert substantially, turns out I could only shave off 5s off of the original 5mins long migration.
+
+Anyway, now we get decent speed:
+
+`Completed Migration1000 in 2.683s` (I'm on a Apple M3 Pro chip)
 
 - In the `RaceDataApp.Reader` (the API) I added super permissive CORS policy that I would obviously have to rework if that were prod software (I did this for the angular app to be able to talk to the backend, since Aspire was generating a new port each time, I couldn't easily add a known list of `allowedOrigins`)
 

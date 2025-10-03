@@ -1,16 +1,14 @@
-using ServiceStack.DataAnnotations;
+using ServiceStack;
 
-namespace RaceDataApp.Loader.Entities;
+namespace RaceDataApp.Loader.ServiceModel;
 
-public class Race
+[Route("/race/save", "POST", Summary = "Saves a new race")]
+public class SaveRace : IReturn<SaveRaceResponse>
 {
-    [PrimaryKey]
-    public int RaceId { get; set; }
-
     public int Year { get; set; }
+    
     public int Round { get; set; }
 
-    [ForeignKey(typeof(Circuit), OnDelete = "CASCADE", OnUpdate = "CASCADE")]
     public int CircuitId { get; set; }
 
     public string Name { get; set; }
@@ -40,4 +38,9 @@ public class Race
     public DateTime? SprintDate { get; set; }
     
     public TimeSpan? SprintTime { get; set; }
+}
+
+public class SaveRaceResponse
+{
+    public int RaceId { get; set; }
 }

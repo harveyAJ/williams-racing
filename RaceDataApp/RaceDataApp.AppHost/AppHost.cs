@@ -27,7 +27,7 @@ var migrations = builder.AddProject<RaceDataApp_Loader>("race-data-loader")
 
 // var migrations = builder.AddProject<RaceDataApp_Loader_Console>("migrations")
 //     .WithReference(raceDb)
-//     .WithReference(postgres);
+//     .WaitFor(postgres);
 
 var raceDataAppApi = builder.AddProject<RaceDataApp_Reader>("race-data-api")
     .WithReference(raceDb)
